@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Word</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #1bb295;
+}
+.wrapper{
+    width: 430px;
+    background-color: #fff;
+    border-radius: 10px;
+}
+.wrapper h1{
+    font-size: 25px;
+    font-weight: 500;
+    padding: 20px 25px;
+    border-bottom: 1px solid #ccc;
+}
+.content .typing-input{
+    opacity: 0;
+    z-index: -999;
+    position: absolute;
+}
+.wrapper .content{
+    margin: 25px 25px 35px;
+}
+.content .inputs{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.inputs input{
+    height: 57px;
+    width: 56px;
+    margin: 4px;
+    font-size: 24px;
+    font-weight: 500;
+    text-align: center;
+    text-transform: uppercase;
+    color: #1bb295;
+    background-color: none;
+    border-radius: 5px;
+    border: 1px solid #b5b5b5;
+}
+.inputs input:first-child{
+    margin-left: 0px;
+}
+.content .details{
+    margin: 20px 0 25px;
+}
+.details p{
+    font-size: 19px;
+    margin-bottom: 10px;
+}
+
+.content .reset-btn{
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    padding: 15px 0;
+    background-color: #1bb295;
+    border-radius: 5px;
+}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Guess The Word</h1>
+        <div class="content">
+            <input type="text" class="typing-input" maxlength="1">
+            <div class="inputs">
+            </div>
+            <div class="details">
+                <p class="hint">Hint: <span><b></b></span></p>
+                <p class="guess-left">Remaining Guess: <span>10</span></p>
+                <p class="wrong-letter">Wrong Letter: <span></span></p>
+            </div>
+            <button class="reset-btn">Reset Game</button>
+        </div>
+    </div>
+    <script>
+ let wordList = [
+    {
+        word: "python",
+        hint: "programming language"
+    },
+    {
+        word: "guitar",
+        hint: "a musical instrument"
+    },
+    {
+        word: "aim",
+        hint: "a purpose or intention"
+    },
+    {
+        word: "venus",
+        hint: "planet of our solar system"
+    },
+    {
+        word: "gold",
+        hint: "a yellow precious metal"
+    },
+    {
+        word: "ebay",
+        hint: "online shopping site"
+    },
+    {
+        word: "golang",
+        hint: "programming language"
+    },
+    {
+        word: "coding",
+        hint: "related to programming"
+    },
+    {
+        word: "matrix",
+        hint: "science fiction movie"
+    },
+    {
+        word: "bugs",
+        hint: "related to programming"
+    },
+    {
+        word: "avatar",
+        hint: "epic science fiction film"
+    },
+    {
+        word: "gif",
+        hint: "a file format for image"
+    },
+    {
+        word: "mental",
+        hint: "related to the mind"
+    },
+    {
+        word: "map",
+        hint: "diagram represent of an area"
+    },
+    {
+        word: "island",
+        hint: "land surrounded by water"
+    },
+    {
+        word: "hockey",
+        hint: "a famous outdoor game"
+    },
+    {
+        word: "chess",
+        hint: "related to a indoor game"
+    },
+    {
+        word: "viber",
+        hint: "a social media app"
+    },
+    {
+        word: "github",
+        hint: "code hosting platform"
+    },
+    {
+        word: "png",
+        hint: "a image file format"
+    },
+    {
+        word: "silver",
+        hint: "precious greyish-white metal"
+    },
+    {
+        word: "mobile",
+        hint: "an electronic device"
+    },
+    {
+        word: "gpu",
+        hint: "computer component"
+    },
+    {
+        word: "java",
+        hint: "programming language"
+    },
+    {
+        word: "google",
+        hint: "famous search engine"
+    },
+    {
+        word: "venice",
+        hint: "famous city of waters"
+    },
+    {
+        word: "excel",
+        hint: "microsoft product for windows"
+    },
+    {
+        word: "mysql",
+        hint: "a relational database system"
+    },
+    {
+        word: "nepal",
+        hint: "developing country name"
+    },
+    {
+        word: "flute",
+        hint: "a musical instrument"
+    },
+    {
+        word: "crypto",
+        hint: "related to cryptocurrency"
+    },
+    {
+        word: "tesla",
+        hint: "unit of magnetic flux density"
+    },
+    {
+        word: "mars",
+        hint: "planet of our solar system"
+    },
+    {
+        word: "proxy",
+        hint: "related to server application"
+    },
+    {
+        word: "email",
+        hint: "related to exchanging message"
+    },
+    {
+        word: "html",
+        hint: "markup language for the web"
+    },
+    {
+        word: "air",
+        hint: "related to a gas"
+    },
+    {
+        word: "idea",
+        hint: "a thought or suggestion"
+    },
+    {
+        word: "server",
+        hint: "related to computer or system"
+    },
+    {
+        word: "svg",
+        hint: "a vector image format"
+    },
+    {
+        word: "jpeg",
+        hint: "a image file format"
+    },
+    {
+        word: "search",
+        hint: "act to find something"
+    },
+    {
+        word: "key",
+        hint: "small piece of metal"
+    },
+    {
+        word: "egypt",
+        hint: "a country name"
+    },
+    {
+        word: "joker",
+        hint: "psychological thriller film"
+    },
+    {
+        word: "dubai",
+        hint: "developed country name"
+    },
+    {
+        word: "photo",
+        hint: "representation of person or scene"
+    },
+    {
+        word: "nile",
+        hint: "largest river in the world"
+    },
+    {
+        word: "rain",
+        hint: "related to a water"
+    },
+]
+
+
+import { wordList } from "./words.js";
+
+const inputEls = document.querySelector('.inputs');
+const resetBtn = document.querySelector('.reset-btn');
+const hintEl = document.querySelector('.hint b');
+const typingInput = document.querySelector('.typing-input');
+const wrongLetterEl = document.querySelector('.wrong-letter span');
+
+let word;
+let wrongLetter = [];
+
+function randomWord (){
+    let randomObj = wordList[Math.floor(Math.random() * wordList.length)];
+    word = randomObj.word;
+    console.log(randomObj)
+
+    let html = '';
+    for(let i = 0; i < word.length; i++){
+        html+= `  <input type="text" disabled>`;
+    }
+    inputEls.innerHTML = html;
+    hintEl.innerHTML = randomObj.hint;
+}
+
+randomWord();
+
+function initGame(e){
+   let key = e.target.value;
+    if (key.match(/^[A-Za-z]+$/)){
+       if(word.includes(key)){
+        for(let i = 0; i < word.length; i++){
+            if (word[i] === key){
+                inputEls.querySelectorAll('input')[i].value = key;
+        
+            }
+        }
+       }
+    } else{
+       if(!wrongLetter.includes(key)){
+        wrongLetter.push(key);
+       }
+
+          wrongLetterEl.innerHTML = ` ${wrongLetter}`;
+    }
+
+ 
+    typingInput.value = '';
+}
+
+resetBtn.addEventListener('click', randomWord);
+typingInput.addEventListener('input', initGame)
+document.addEventListener('keydown', () => typingInput.focus());
+
+    </script>
+</body>
+</html>
